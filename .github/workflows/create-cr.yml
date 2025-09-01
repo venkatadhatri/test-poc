@@ -1,0 +1,34 @@
+name: Create Change Request
+
+on:
+  issues:
+    types: [edited]
+
+jobs:
+  create-cr:
+    if: contains(github.event.issue.labels.*.name, 'open-cr')
+    runs-on: ubuntu-latest
+    steps:
+      - name: Extract Checked PRs
+        id: extract
+        run: |
+          echo "Checked PRs:"
+          echo "${{ github.event.issue.body }}" | grep '\[x\]' > checked_prs.txt
+          cat checked_prs.txt
+
+      - name: Format CR Body
+        id: format
+        run: |
+          echo "## Change Request Summary" > cr_body.txt
+          echo "Selected PRs:" >> cr_body.txt
+          cat checked_prs.txt >> cr_body.txt
+
+      - name: Create CR Issue
+        env:
+          GH_TOKEN: ${{ secrets.GH_TOKEN }}
+        run: |
+          BODY=$(cat cr_body.txt | jq -Rs .)
+          curl -s -X POST -H "Authorization: token $GH_TOKEN" \
+            -H "Content-Type: application/json" \
+            -d "{\"title\": \"Change Request from Selected PRs\", \"body\": $BODY}" \
+            https://api.github.com/repos/${{ github.repository }}/issues
