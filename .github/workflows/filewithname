@@ -1,9 +1,8 @@
 name: Pull PRs and Create Selection Issue
 
 on:
-  workflow_dispatch:
-  schedule:
-    - cron: '0 9 * * *'  # Daily at 9 AM
+  pull_request:
+    branches: main
 
 jobs:
   pull-prs:
@@ -13,7 +12,7 @@ jobs:
         env:
           GH_TOKEN: ${{ secrets.GH_TOKEN }}
         run: |
-          REPOS=("org/repo1" "org/repo2")
+          REPOS=("venkatadhatri/test-poc" "venkatadhatri/sample-poc")
           echo "## Select PRs for Change Request" > pr_list.md
 
           for repo in "${REPOS[@]}"; do
