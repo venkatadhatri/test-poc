@@ -26,5 +26,5 @@ jobs:
 
           curl -s -X POST -H "Authorization: token $GH_TOKEN" \
             -H "Content-Type: application/json" \
-            -d "{\"title\": \"Select PRs for Change Request\", \"body\": $ISSUE_BODY}" \
+            -d "{\"title\": \"Select PRs for Change Request\", \"body\": $ISSUE_BODY, \"labels\": [\"open-cr\"]}" \
             https://api.github.com/repos/venkatadhatri/test-poc/issues
