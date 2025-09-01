@@ -1,8 +1,7 @@
 name: Pull PRs and Create Selection Issue
 
 on:
-  pull_request:
-    branches: main
+  workflow_dispatch:
 
 jobs:
   pull-prs:
@@ -18,14 +17,13 @@ jobs:
           for repo in "${REPOS[@]}"; do
             echo "### $repo" >> pr_list.md
             curl -s -H "Authorization: token $GH_TOKEN" \
-              "https://github.com/repos/$repo/pulls?state=open" |
+              "https://api.github.com/repos/$repo/pulls?state=open" |
               jq -r '.[] | "- [ ] \(.title) (\(.html_url))"' >> pr_list.md
           done
 
-          ISSUE_BODY=$(cat pr_list.md | jq -Rs .)
+          ISSUE_BODY=$(jq -Rs . < pr_list.md)
 
           curl -s -X POST -H "Authorization: token $GH_TOKEN" \
             -H "Content-Type: application/json" \
             -d "{\"title\": \"Select PRs for Change Request\", \"body\": $ISSUE_BODY}" \
-            https://github.com/venkatadhatri/test-poc/issues
-
+            https://api.github.com/repos/venkatadhatri/test-poc/issues
