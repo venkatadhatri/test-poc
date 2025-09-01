@@ -1,8 +1,8 @@
 name: Create Change Request
 
 on:
-  issues:
-    types: [edited]
+  issue_comment:
+    types: [created]
 
 jobs:
   create-cr:
@@ -32,3 +32,11 @@ jobs:
             -H "Content-Type: application/json" \
             -d "{\"title\": \"Change Request from Selected PRs\", \"body\": $BODY}" \
             https://api.github.com/repos/${{ github.repository }}/issues
+      - name: Remove trigger-cr label
+        env:
+          GH_TOKEN: ${{ secrets.GITHUB_TOKEN }}
+        run: |
+          curl -X DELETE \
+          -H "Authorization: token $GH_TOKEN" \
+          https://api.github.com/repos/${{ github.repository }}/issues/${{ github.event.issue.number }}/labels/open-cr
+      
