@@ -6,7 +6,8 @@ on:
 
 jobs:
   create-cr:
-    if: contains(github.event.issue.labels.*.name, 'open-cr')
+    if: github.event.comment.body == 'submit-cr' &&
+        contains(github.event.issue.labels.*.name, 'open-cr')
     runs-on: ubuntu-latest
     steps:
       - name: Extract Checked PRs
