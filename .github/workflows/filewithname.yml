@@ -1,7 +1,8 @@
 name: Pull PRs and Create Selection Issue
 
 on:
-  workflow_dispatch:
+  pull_request: 
+    branches: main
 
 jobs:
   pull-prs:
