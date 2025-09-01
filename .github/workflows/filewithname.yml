@@ -13,7 +13,7 @@ jobs:
           GH_TOKEN: ${{ secrets.GH_TOKEN }}
         run: |
           REPOS=("venkatadhatri/test-poc" "venkatadhatri/sample-poc")
-          echo "## Select PRs for Change Request" > pr_list.md
+          echo "## Select PRs for Change Request" > pr_list.md 
 
           for repo in "${REPOS[@]}"; do
             echo "### $repo" >> pr_list.md
