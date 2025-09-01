@@ -6,7 +6,7 @@ on:
 
 jobs:
   create-cr:
-    if: contains(github.event.issue.labels.*.name, 'trigger-cr')
+    if: contains(github.event.issue.labels.*.name, 'open-cr')
     runs-on: ubuntu-latest
     steps:
       - name: Echo Selected PRs
