@@ -18,7 +18,7 @@ jobs:
           for repo in "${REPOS[@]}"; do
             echo "### $repo" >> pr_list.md
             curl -s -H "Authorization: token $GH_TOKEN" \
-              "https://api.github.com/repos/$repo/pulls?state=open" |
+              "https://github.com/repos/$repo/pulls?state=open" |
               jq -r '.[] | "- [ ] \(.title) (\(.html_url))"' >> pr_list.md
           done
 
@@ -27,5 +27,5 @@ jobs:
           curl -s -X POST -H "Authorization: token $GH_TOKEN" \
             -H "Content-Type: application/json" \
             -d "{\"title\": \"Select PRs for Change Request\", \"body\": $ISSUE_BODY}" \
-            https://api.github.com/repos/org/central-repo/issues
+            https://github.com/venkatadhatri/test-poc/issues
 
