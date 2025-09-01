@@ -2,14 +2,13 @@ name: Create Change Request
 
 on:
   issues:
-    types: [opened]
+    types: [labeled]
 
 jobs:
   create-cr:
-    if: github.event.issue.title == 'Select PRs for Change Request'
+    if: contains(github.event.issue.labels.*.name, 'trigger-cr')
     runs-on: ubuntu-latest
     steps:
-      - name: Print Issue Body
+      - name: Echo Selected PRs
         run: echo "${{ github.event.issue.body }}"
 
-      # Add your CR creation logic here
