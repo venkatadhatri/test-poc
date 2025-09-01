@@ -2,13 +2,16 @@ name: Create Change Request
 
 on:
   issues:
-    types: [labeled]
+    types: [labeled,edited]
 
 jobs:
   create-cr:
     if: contains(github.event.issue.labels.*.name, 'open-cr')
     runs-on: ubuntu-latest
     steps:
-      - name: Echo Selected PRs
-        run: echo "${{ github.event.issue.body }}"
+      - name: Show Selected PRs
+        run: |
+           echo "${{ github.event.issue.body }}" | grep '\[x\]' > selected_prs.txt
+      - name: Echo CR creation
+        run: echo "CR created"
 
