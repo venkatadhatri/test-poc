@@ -1,0 +1,42 @@
+name: Echo Change Request from Selected PRs
+
+on:
+  pull_request:
+    branches: main
+    inputs:
+      issue_number:
+        description: 'Issue number with selected PRs'
+        required: true
+
+jobs:
+  echo-cr:
+    runs-on: ubuntu-latest
+    steps:
+      - name: Fetch and Parse Selected PRs
+        env:
+          GH_TOKEN: ${{ secrets.GH_TOKEN }}
+        run: |
+          echo "🔍 Fetching issue #${{ github.event.inputs.issue_number }}"
+
+          curl -s -H "Authorization: token $GH_TOKEN" \
+            https://api.github.com/repos/org/central-repo/issues/${{ github.event.inputs.issue_number }} |
+            jq -r '.body' > issue_body.txt
+
+          grep '
+
+\[x\]
+
+' issue_body.txt > selected_prs.txt
+
+          echo "✅ Selected PRs:"
+          cat selected_prs.txt
+
+          DESC=$(cat selected_prs.txt | sed 's/- 
+
+\[x\]
+
+ //g' | paste -sd '; ' -)
+
+          echo "📝 Simulated Change Request:"
+          echo "Short Description: GitHub PRs for Change"
+          echo "Description: $DESC"
